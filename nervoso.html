@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IER - Nervoso</title>
+<meta name="description" content="Jogo de fixação IER - Nervoso">
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#eef3f6;color:#17313b}
+header{background:#0f4c5c;color:white;padding:18px 16px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.header-inner{max-width:820px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-weight:800;font-size:30px;letter-spacing:.5px}
+.back{color:white;text-decoration:none;font-size:14px}
+.wrap{max-width:820px;margin:0 auto;padding:18px}
+.subtitle{color:#56717a;margin:4px 0 18px}
+.card{background:white;border-radius:18px;padding:22px;box-shadow:0 8px 28px rgba(15,76,92,.12)}
+.meta{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:#526b73}
+.progress{height:11px;background:#dfe8eb;border-radius:999px;overflow:hidden;margin:18px 0 22px}
+.bar{height:100%;background:#0f4c5c;width:0%;transition:width .25s}
+h2{font-size:22px;line-height:1.35;margin:0 0 16px}
+.opt{display:block;width:100%;text-align:left;padding:14px 15px;margin:10px 0;border:1px solid #cfdde2;border-radius:12px;background:white;color:#17313b;font-size:16px;cursor:pointer;transition:.15s}
+.opt:hover{background:#f3f8fa;border-color:#8fb7c1}
+.opt:disabled{cursor:default}
+.correct{background:#e2f6e9!important;border-color:#2f9e5b!important}
+.wrong{background:#fde8e8!important;border-color:#d94b4b!important}
+.feedback{margin-top:16px;padding:15px;border-radius:12px;background:#f4f8fa;display:none;line-height:1.45}
+.next{margin-top:16px;padding:12px 18px;border:0;border-radius:12px;background:#0f4c5c;color:white;font-size:16px;font-weight:700;cursor:pointer;display:none}
+.result{text-align:center;padding:12px}
+.big{font-size:48px;font-weight:800;color:#0f4c5c}
+.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:18px}
+.action{padding:12px 16px;border-radius:12px;text-decoration:none;border:0;cursor:pointer;font-weight:700}
+.primary{background:#0f4c5c;color:white}
+.secondary{background:#e7eff2;color:#17313b}
+footer{text-align:center;color:#78909a;font-size:13px;padding:24px}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">IER</div>
+    <a class="back" href="index.html">← Voltar aos jogos</a>
+  </div>
+</header>
+<div class="wrap">
+  <div class="subtitle">Jogo de Fixação • Nervoso • 25 questões</div>
+  <div class="card" id="game">
+    <div class="meta"><span id="count"></span><span id="score">Acertos: 0</span></div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <h2 id="question"></h2>
+    <div id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next" id="next">Próxima questão</button>
+  </div>
+</div>
+<footer>IER • Aprender praticando</footer>
+<script>
+const questions = [{"q": "O sistema nervoso é responsável por:", "options": ["Ações voluntárias e involuntárias", "Somente digestão", "Somente hematose", "Somente coagulação"], "answer": 0, "explanation": "A apostila destaca controle de ações voluntárias e involuntárias."}, {"q": "Os dois tipos celulares básicos citados no sistema nervoso são:", "options": ["Neurônios e neuróglia", "Hemácias e plaquetas", "Osteócitos e condrócitos", "Hepatócitos e néfrons"], "answer": 0, "explanation": "O material apresenta neurônios e células da glia."}, {"q": "As micróglias são responsáveis principalmente pela:", "options": ["Fagocitose de corpos estranhos no SNC", "Produção de bile", "Contração cardíaca", "Produção de suor"], "answer": 0, "explanation": "Apostila associa micróglias à fagocitose."}, {"q": "Os oligodendrócitos formam e mantêm mielina no:", "options": ["SNC", "SNP", "Sistema digestório", "Sistema urinário"], "answer": 0, "explanation": "Oligodendrócitos são relacionados à mielina no SNC."}, {"q": "As células de Schwann produzem mielina no:", "options": ["SNP", "SNC exclusivamente", "Fígado", "Coração"], "answer": 0, "explanation": "Apostila associa células de Schwann aos axônios do SNP."}, {"q": "A mielina permite:", "options": ["Propagação rápida de impulsos nervosos", "Produção de urina", "Coagulação", "Digestão de gorduras"], "answer": 0, "explanation": "O material destaca o isolamento elétrico e a condução rápida."}, {"q": "As células ependimárias auxiliam na:", "options": ["Movimentação do LCR", "Produção de sebo", "Hematose", "Coagulação"], "answer": 0, "explanation": "Apostila relaciona ependimárias ao LCR."}, {"q": "Os astrócitos têm função de:", "options": ["Sustentar e nutrir neurônios do SNC", "Produzir bile", "Bombear sangue", "Formar unhas"], "answer": 0, "explanation": "Essa função é citada no material."}, {"q": "O sistema nervoso central inclui:", "options": ["Encéfalo e medula espinal", "Nervos e gânglios apenas", "Coração e vasos", "Rins e ureteres"], "answer": 0, "explanation": "O esquema da apostila apresenta encéfalo e medula espinal no SNC."}, {"q": "O sistema nervoso periférico inclui:", "options": ["Nervos e gânglios", "Cérebro e cerebelo apenas", "Ventrículos cardíacos", "Alvéolos"], "answer": 0, "explanation": "O SNP é composto por nervos e gânglios."}, {"q": "O telencéfalo compreende:", "options": ["Dois hemisférios cerebrais", "Somente o cerebelo", "Somente a medula", "Somente o bulbo"], "answer": 0, "explanation": "Apostila descreve dois hemisférios cerebrais."}, {"q": "O corpo caloso une:", "options": ["Os dois hemisférios cerebrais", "Os dois rins", "Os dois pulmões", "Átrio e ventrículo"], "answer": 0, "explanation": "O corpo caloso é uma estrutura inter-hemisférica."}, {"q": "O lobo frontal está relacionado ao:", "options": ["Centro cortical da fala", "Centro da visão", "Centro da audição", "Filtração renal"], "answer": 0, "explanation": "A apostila relaciona o lobo frontal à fala."}, {"q": "O lobo temporal está relacionado principalmente à:", "options": ["Audição", "Visão", "Filtração", "Coagulação"], "answer": 0, "explanation": "O lobo temporal é associado ao centro cortical da audição."}, {"q": "O lobo parietal participa da percepção de:", "options": ["Tato, temperatura, pressão e dor", "Somente visão", "Somente olfato", "Produção hormonal"], "answer": 0, "explanation": "Essas sensibilidades são citadas no material."}, {"q": "O lobo occipital está relacionado à:", "options": ["Visão", "Audição", "Deglutição", "Micção"], "answer": 0, "explanation": "A apostila associa o lobo occipital à visão."}, {"q": "O diencéfalo faz conexão com o sistema:", "options": ["Endócrino", "Tegumentar apenas", "Digestório apenas", "Ósseo apenas"], "answer": 0, "explanation": "A apostila destaca a conexão do diencéfalo com o sistema endócrino."}, {"q": "O hipotálamo participa do controle da:", "options": ["Temperatura corporal", "Cor dos olhos apenas", "Coagulação", "Produção de bile"], "answer": 0, "explanation": "O controle da temperatura é uma função destacada."}, {"q": "A glândula pineal produz:", "options": ["Melatonina", "Insulina", "Testosterona", "Bile"], "answer": 0, "explanation": "A pineal é associada à melatonina e ao sono."}, {"q": "A hipófise é também chamada de:", "options": ["Glândula pituitária", "Glândula sebácea", "Timo", "Baço"], "answer": 0, "explanation": "A apostila apresenta os dois nomes."}, {"q": "O tronco encefálico é formado por:", "options": ["Mesencéfalo, ponte e bulbo", "Frontal, parietal e occipital", "Tálamo, rim e ponte", "Cerebelo e medula apenas"], "answer": 0, "explanation": "O material usa a divisão mesencéfalo, ponte e bulbo."}, {"q": "O bulbo ajuda a regular:", "options": ["Frequência cardíaca e ritmo respiratório", "Cor da pele", "Produção de bile", "Crescimento das unhas"], "answer": 0, "explanation": "Apostila relaciona o bulbo a funções vitais."}, {"q": "O cerebelo está relacionado principalmente ao:", "options": ["Equilíbrio e coordenação motora", "Olfato", "Produção de urina", "Coagulação"], "answer": 0, "explanation": "O material destaca equilíbrio e coordenação dos movimentos."}, {"q": "Quantos pares de nervos cranianos são citados?", "options": ["8", "10", "12", "31"], "answer": 2, "explanation": "A apostila informa 12 pares de nervos cranianos."}, {"q": "Quantos pares de nervos espinais são citados?", "options": ["12", "20", "31", "50"], "answer": 2, "explanation": "O material informa 31 pares de nervos espinais."}];
+let current=0, score=0;
+function render(){
+  const item=questions[current];
+  document.getElementById('count').textContent=`Questão ${current+1} de ${questions.length}`;
+  document.getElementById('score').textContent=`Acertos: ${score}`;
+  document.getElementById('bar').style.width=`${(current/questions.length)*100}%`;
+  document.getElementById('question').textContent=item.q;
+  const box=document.getElementById('options');
+  box.innerHTML='';
+  const fb=document.getElementById('feedback');
+  fb.style.display='none';
+  fb.textContent='';
+  document.getElementById('next').style.display='none';
+  item.options.forEach((txt,idx)=>{
+    const b=document.createElement('button');
+    b.className='opt';
+    b.textContent=String.fromCharCode(65+idx)+') '+txt;
+    b.onclick=()=>answer(idx,b);
+    box.appendChild(b);
+  });
+}
+function answer(idx,btn){
+  const item=questions[current];
+  [...document.querySelectorAll('.opt')].forEach((b,i)=>{
+    b.disabled=true;
+    if(i===item.answer) b.classList.add('correct');
+  });
+  if(idx===item.answer) score++;
+  else btn.classList.add('wrong');
+  document.getElementById('score').textContent=`Acertos: ${score}`;
+  const fb=document.getElementById('feedback');
+  fb.textContent=(idx===item.answer?'Muito bem! ':'Revise este ponto. ')+item.explanation;
+  fb.style.display='block';
+  document.getElementById('next').style.display='inline-block';
+}
+document.getElementById('next').onclick=()=>{
+  current++;
+  if(current<questions.length) render();
+  else finish();
+};
+function finish(){
+  document.getElementById('bar').style.width='100%';
+  const pct=Math.round(score/questions.length*100);
+  let msg = pct>=80 ? 'Excelente desempenho!' : pct>=60 ? 'Bom trabalho! Continue praticando.' : 'Vale revisar o conteúdo e tentar novamente.';
+  document.getElementById('game').innerHTML=`
+    <div class="result">
+      <div class="big">${score}/${questions.length}</div>
+      <h2>Resultado final</h2>
+      <p>Você acertou <strong>${pct}%</strong> das questões.</p>
+      <p>${msg}</p>
+      <div class="actions">
+        <button class="action primary" onclick="location.reload()">Jogar novamente</button>
+        <a class="action secondary" href="index.html">Outros jogos</a>
+      </div>
+    </div>`;
+}
+render();
+</script>
+</body>
+</html>

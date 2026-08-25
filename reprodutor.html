@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IER - Reprodutor</title>
+<meta name="description" content="Jogo de fixação IER - Reprodutor">
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#eef3f6;color:#17313b}
+header{background:#0f4c5c;color:white;padding:18px 16px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.header-inner{max-width:820px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-weight:800;font-size:30px;letter-spacing:.5px}
+.back{color:white;text-decoration:none;font-size:14px}
+.wrap{max-width:820px;margin:0 auto;padding:18px}
+.subtitle{color:#56717a;margin:4px 0 18px}
+.card{background:white;border-radius:18px;padding:22px;box-shadow:0 8px 28px rgba(15,76,92,.12)}
+.meta{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:#526b73}
+.progress{height:11px;background:#dfe8eb;border-radius:999px;overflow:hidden;margin:18px 0 22px}
+.bar{height:100%;background:#0f4c5c;width:0%;transition:width .25s}
+h2{font-size:22px;line-height:1.35;margin:0 0 16px}
+.opt{display:block;width:100%;text-align:left;padding:14px 15px;margin:10px 0;border:1px solid #cfdde2;border-radius:12px;background:white;color:#17313b;font-size:16px;cursor:pointer;transition:.15s}
+.opt:hover{background:#f3f8fa;border-color:#8fb7c1}
+.opt:disabled{cursor:default}
+.correct{background:#e2f6e9!important;border-color:#2f9e5b!important}
+.wrong{background:#fde8e8!important;border-color:#d94b4b!important}
+.feedback{margin-top:16px;padding:15px;border-radius:12px;background:#f4f8fa;display:none;line-height:1.45}
+.next{margin-top:16px;padding:12px 18px;border:0;border-radius:12px;background:#0f4c5c;color:white;font-size:16px;font-weight:700;cursor:pointer;display:none}
+.result{text-align:center;padding:12px}
+.big{font-size:48px;font-weight:800;color:#0f4c5c}
+.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:18px}
+.action{padding:12px 16px;border-radius:12px;text-decoration:none;border:0;cursor:pointer;font-weight:700}
+.primary{background:#0f4c5c;color:white}
+.secondary{background:#e7eff2;color:#17313b}
+footer{text-align:center;color:#78909a;font-size:13px;padding:24px}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">IER</div>
+    <a class="back" href="index.html">← Voltar aos jogos</a>
+  </div>
+</header>
+<div class="wrap">
+  <div class="subtitle">Jogo de Fixação • Reprodutor • 25 questões</div>
+  <div class="card" id="game">
+    <div class="meta"><span id="count"></span><span id="score">Acertos: 0</span></div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <h2 id="question"></h2>
+    <div id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next" id="next">Próxima questão</button>
+  </div>
+</div>
+<footer>IER • Aprender praticando</footer>
+<script>
+const questions = [{"q": "No sexo masculino, as gônadas são:", "options": ["Ovários", "Testículos", "Rins", "Adrenais"], "answer": 1, "explanation": "A tabela da apostila relaciona masculino a testículos."}, {"q": "No sexo feminino, as gônadas são:", "options": ["Ovários", "Testículos", "Próstata", "Vesículas seminais"], "answer": 0, "explanation": "A tabela relaciona feminino a ovários."}, {"q": "O gameta masculino é o:", "options": ["Óvulo", "Espermatozoide", "Linfócito", "Eritrócito"], "answer": 1, "explanation": "Os testículos produzem espermatozoides."}, {"q": "O gameta feminino é o:", "options": ["Óvulo", "Espermatozoide", "Plaqueta", "Neurônio"], "answer": 0, "explanation": "Os ovários produzem e armazenam óvulos."}, {"q": "O principal hormônio sexual masculino citado é:", "options": ["Testosterona", "Insulina", "Melatonina", "ADH"], "answer": 0, "explanation": "Os testículos secretam testosterona."}, {"q": "Os testículos estão localizados no:", "options": ["Saco escrotal", "Mediastino", "Crânio", "Peritônio visceral"], "answer": 0, "explanation": "A apostila localiza os testículos no saco escrotal."}, {"q": "O epidídimo tem como função:", "options": ["Armazenar espermatozoides", "Produzir urina", "Armazenar bile", "Produzir suor"], "answer": 0, "explanation": "O epidídimo armazena espermatozoides."}, {"q": "Os ductos deferentes conduzem espermatozoides dos epidídimos até a:", "options": ["Próstata", "Bexiga", "Traqueia", "Vesícula biliar"], "answer": 0, "explanation": "Essa condução é descrita no sistema genital masculino."}, {"q": "A glândula bulbouretral tem como função:", "options": ["Lubrificar a uretra", "Filtrar o sangue", "Produzir bile", "Produzir linfa"], "answer": 0, "explanation": "A apostila relaciona essa glândula à lubrificação uretral."}, {"q": "A vesícula seminal produz aproximadamente qual parcela do líquido seminal, segundo a apostila?", "options": ["10%", "30%", "60%", "100%"], "answer": 2, "explanation": "O material cita cerca de 60%."}, {"q": "A próstata produz:", "options": ["Parte do líquido que forma o esperma", "Urina", "Bile", "Suor"], "answer": 0, "explanation": "A secreção prostática ajuda a nutrir e proteger espermatozoides."}, {"q": "O sêmen tem como função principal:", "options": ["Transportar, nutrir e proteger espermatozoides", "Transportar oxigênio", "Filtrar sangue", "Produzir anticorpos"], "answer": 0, "explanation": "O material descreve essas funções do sêmen."}, {"q": "O pênis participa principalmente da:", "options": ["Transferência de espermatozoides ao sistema genital feminino", "Produção de urina", "Filtração sanguínea", "Produção de bile"], "answer": 0, "explanation": "Essa função é citada na apostila."}, {"q": "A vagina funciona, entre outras funções, como:", "options": ["Receptáculo durante a relação sexual e canal de parto", "Câmara cardíaca", "Via respiratória", "Órgão de filtração"], "answer": 0, "explanation": "A apostila cita relação sexual, fluxo menstrual e passagem do feto."}, {"q": "O útero é o local de:", "options": ["Implantação do óvulo fertilizado e desenvolvimento fetal", "Produção de urina", "Hematose", "Produção de suor"], "answer": 0, "explanation": "O útero é descrito como local de implantação e desenvolvimento fetal."}, {"q": "Os ovários produzem e armazenam:", "options": ["Óvulos", "Espermatozoides", "Hemácias", "Plaquetas"], "answer": 0, "explanation": "Os ovários estão relacionados aos gametas femininos."}, {"q": "Os ovários secretam principalmente:", "options": ["Progesterona e estrogênio", "Insulina e glucagon", "ADH e GH", "T3 e T4 apenas"], "answer": 0, "explanation": "Esses hormônios são citados no sistema genital feminino."}, {"q": "A fecundação ocorre normalmente nas:", "options": ["Tubas uterinas", "Vagina", "Uretra", "Bexiga"], "answer": 0, "explanation": "A apostila indica as tubas uterinas como local da fecundação."}, {"q": "As tubas uterinas medem aproximadamente:", "options": ["1 cm", "10 cm", "50 cm", "1 metro"], "answer": 1, "explanation": "O material cita aproximadamente 10 cm."}, {"q": "Qual estrutura pertence ao sistema genital masculino?", "options": ["Epidídimo", "Tuba uterina", "Ovário", "Útero"], "answer": 0, "explanation": "O epidídimo integra o sistema genital masculino."}, {"q": "Qual estrutura pertence ao sistema genital feminino?", "options": ["Útero", "Próstata", "Ducto deferente", "Epidídimo"], "answer": 0, "explanation": "O útero integra o sistema genital feminino."}, {"q": "No homem, a uretra tem função:", "options": ["Urinária e espermática", "Somente digestiva", "Somente respiratória", "Somente linfática"], "answer": 0, "explanation": "A apostila destaca as duas funções."}, {"q": "O líquido prostático ajuda a proteger os espermatozoides do:", "options": ["Ambiente ácido da vagina", "Ar atmosférico", "Suor", "Líquido pericárdico"], "answer": 0, "explanation": "Essa proteção é mencionada no material."}, {"q": "O esperma é um conjunto de líquidos produzidos por estruturas como:", "options": ["Próstata, glândulas bulbouretrais e vesículas seminais", "Rins e ureteres", "Pulmões e brônquios", "Fígado e vesícula biliar"], "answer": 0, "explanation": "Essas glândulas contribuem para a composição do sêmen."}, {"q": "Qual associação está correta?", "options": ["Testículos — espermatozoides e testosterona", "Ovários — espermatozoides", "Próstata — óvulos", "Útero — testosterona"], "answer": 0, "explanation": "Os testículos produzem espermatozoides e secretam testosterona."}];
+let current=0, score=0;
+function render(){
+  const item=questions[current];
+  document.getElementById('count').textContent=`Questão ${current+1} de ${questions.length}`;
+  document.getElementById('score').textContent=`Acertos: ${score}`;
+  document.getElementById('bar').style.width=`${(current/questions.length)*100}%`;
+  document.getElementById('question').textContent=item.q;
+  const box=document.getElementById('options');
+  box.innerHTML='';
+  const fb=document.getElementById('feedback');
+  fb.style.display='none';
+  fb.textContent='';
+  document.getElementById('next').style.display='none';
+  item.options.forEach((txt,idx)=>{
+    const b=document.createElement('button');
+    b.className='opt';
+    b.textContent=String.fromCharCode(65+idx)+') '+txt;
+    b.onclick=()=>answer(idx,b);
+    box.appendChild(b);
+  });
+}
+function answer(idx,btn){
+  const item=questions[current];
+  [...document.querySelectorAll('.opt')].forEach((b,i)=>{
+    b.disabled=true;
+    if(i===item.answer) b.classList.add('correct');
+  });
+  if(idx===item.answer) score++;
+  else btn.classList.add('wrong');
+  document.getElementById('score').textContent=`Acertos: ${score}`;
+  const fb=document.getElementById('feedback');
+  fb.textContent=(idx===item.answer?'Muito bem! ':'Revise este ponto. ')+item.explanation;
+  fb.style.display='block';
+  document.getElementById('next').style.display='inline-block';
+}
+document.getElementById('next').onclick=()=>{
+  current++;
+  if(current<questions.length) render();
+  else finish();
+};
+function finish(){
+  document.getElementById('bar').style.width='100%';
+  const pct=Math.round(score/questions.length*100);
+  let msg = pct>=80 ? 'Excelente desempenho!' : pct>=60 ? 'Bom trabalho! Continue praticando.' : 'Vale revisar o conteúdo e tentar novamente.';
+  document.getElementById('game').innerHTML=`
+    <div class="result">
+      <div class="big">${score}/${questions.length}</div>
+      <h2>Resultado final</h2>
+      <p>Você acertou <strong>${pct}%</strong> das questões.</p>
+      <p>${msg}</p>
+      <div class="actions">
+        <button class="action primary" onclick="location.reload()">Jogar novamente</button>
+        <a class="action secondary" href="index.html">Outros jogos</a>
+      </div>
+    </div>`;
+}
+render();
+</script>
+</body>
+</html>

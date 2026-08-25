@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IER - Circulatório e Linfático</title>
+<meta name="description" content="Jogo de fixação IER - Circulatório e Linfático">
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#eef3f6;color:#17313b}
+header{background:#0f4c5c;color:white;padding:18px 16px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.header-inner{max-width:820px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-weight:800;font-size:30px;letter-spacing:.5px}
+.back{color:white;text-decoration:none;font-size:14px}
+.wrap{max-width:820px;margin:0 auto;padding:18px}
+.subtitle{color:#56717a;margin:4px 0 18px}
+.card{background:white;border-radius:18px;padding:22px;box-shadow:0 8px 28px rgba(15,76,92,.12)}
+.meta{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:#526b73}
+.progress{height:11px;background:#dfe8eb;border-radius:999px;overflow:hidden;margin:18px 0 22px}
+.bar{height:100%;background:#0f4c5c;width:0%;transition:width .25s}
+h2{font-size:22px;line-height:1.35;margin:0 0 16px}
+.opt{display:block;width:100%;text-align:left;padding:14px 15px;margin:10px 0;border:1px solid #cfdde2;border-radius:12px;background:white;color:#17313b;font-size:16px;cursor:pointer;transition:.15s}
+.opt:hover{background:#f3f8fa;border-color:#8fb7c1}
+.opt:disabled{cursor:default}
+.correct{background:#e2f6e9!important;border-color:#2f9e5b!important}
+.wrong{background:#fde8e8!important;border-color:#d94b4b!important}
+.feedback{margin-top:16px;padding:15px;border-radius:12px;background:#f4f8fa;display:none;line-height:1.45}
+.next{margin-top:16px;padding:12px 18px;border:0;border-radius:12px;background:#0f4c5c;color:white;font-size:16px;font-weight:700;cursor:pointer;display:none}
+.result{text-align:center;padding:12px}
+.big{font-size:48px;font-weight:800;color:#0f4c5c}
+.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:18px}
+.action{padding:12px 16px;border-radius:12px;text-decoration:none;border:0;cursor:pointer;font-weight:700}
+.primary{background:#0f4c5c;color:white}
+.secondary{background:#e7eff2;color:#17313b}
+footer{text-align:center;color:#78909a;font-size:13px;padding:24px}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">IER</div>
+    <a class="back" href="index.html">← Voltar aos jogos</a>
+  </div>
+</header>
+<div class="wrap">
+  <div class="subtitle">Jogo de Fixação • Circulatório e Linfático • 25 questões</div>
+  <div class="card" id="game">
+    <div class="meta"><span id="count"></span><span id="score">Acertos: 0</span></div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <h2 id="question"></h2>
+    <div id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next" id="next">Próxima questão</button>
+  </div>
+</div>
+<footer>IER • Aprender praticando</footer>
+<script>
+const questions = [{"q": "O sistema circulatório apresentado na apostila divide-se em:", "options": ["Cardiovascular e linfático", "Digestório e urinário", "Nervoso e endócrino", "Respiratório e tegumentar"], "answer": 0, "explanation": "O material divide o sistema circulatório em cardiovascular e linfático."}, {"q": "O coração se contrai aproximadamente quantas vezes por dia, segundo a apostila?", "options": ["10 mil", "50 mil", "100 mil", "1 milhão"], "answer": 2, "explanation": "O material informa aproximadamente 100 mil contrações diárias."}, {"q": "O coração tem aproximadamente o tamanho de:", "options": ["Uma cabeça", "Um punho fechado", "Um pé", "Um rim"], "answer": 1, "explanation": "A apostila compara o tamanho do coração a um punho fechado."}, {"q": "Qual camada envolve e protege o coração?", "options": ["Epicárdio", "Endocárdio", "Túnica íntima", "Pleura"], "answer": 0, "explanation": "O epicárdio é descrito como camada que envolve e protege o coração."}, {"q": "Qual camada reveste internamente o coração?", "options": ["Pericárdio", "Endocárdio", "Epicárdio", "Derme"], "answer": 1, "explanation": "O endocárdio reveste internamente o coração."}, {"q": "Qual estrutura muscular é mais espessa no lado esquerdo do coração?", "options": ["Miocárdio", "Endocárdio", "Pericárdio", "Epicárdio"], "answer": 0, "explanation": "A apostila destaca maior espessura do miocárdio esquerdo."}, {"q": "O coração possui quantas câmaras?", "options": ["2", "3", "4", "6"], "answer": 2, "explanation": "São dois átrios e dois ventrículos."}, {"q": "Os átrios têm como função principal:", "options": ["Ejetar sangue para o corpo", "Receber sangue", "Produzir linfa", "Filtrar plasma"], "answer": 1, "explanation": "Os átrios são câmaras receptoras."}, {"q": "Os ventrículos têm como função principal:", "options": ["Receber ar", "Ejetar sangue", "Produzir hormônios", "Filtrar linfa"], "answer": 1, "explanation": "Os ventrículos são câmaras de bombeamento."}, {"q": "A valva entre o átrio direito e o ventrículo direito é:", "options": ["Mitral", "Tricúspide", "Aórtica", "Pulmonar"], "answer": 1, "explanation": "A valva tricúspide separa as câmaras direitas."}, {"q": "A valva entre o átrio esquerdo e o ventrículo esquerdo é:", "options": ["Mitral ou bicúspide", "Tricúspide", "Pulmonar", "Aórtica"], "answer": 0, "explanation": "A apostila usa os termos mitral ou bicúspide."}, {"q": "A sístole corresponde à:", "options": ["Fase de relaxamento", "Fase de contração", "Filtração da linfa", "Troca gasosa"], "answer": 1, "explanation": "Sístole é a fase de contração de uma câmara cardíaca."}, {"q": "A diástole corresponde à:", "options": ["Fase de relaxamento", "Fase de coagulação", "Fase de hematose", "Fase de digestão"], "answer": 0, "explanation": "Diástole é a fase de relaxamento."}, {"q": "As duas circulações citadas são:", "options": ["Sistêmica e pulmonar", "Portal e linfática apenas", "Renal e hepática", "Coronária e cerebral apenas"], "answer": 0, "explanation": "O material apresenta grande circulação sistêmica e pequena circulação pulmonar."}, {"q": "As hemácias têm como função principal:", "options": ["Defesa", "Coagulação", "Transportar oxigênio", "Produzir anticorpos"], "answer": 2, "explanation": "As hemácias ou glóbulos vermelhos transportam oxigênio."}, {"q": "Os glóbulos brancos atuam principalmente na:", "options": ["Defesa", "Coagulação", "Digestão", "Ventilação"], "answer": 0, "explanation": "O material identifica os glóbulos brancos como células de defesa."}, {"q": "As plaquetas atuam principalmente na:", "options": ["Coagulação do sangue", "Produção de oxigênio", "Digestão", "Olfação"], "answer": 0, "explanation": "As plaquetas participam da coagulação."}, {"q": "O plasma corresponde à:", "options": ["Parte líquida do sangue", "Parte óssea do sangue", "Camada muscular do vaso", "Válvula venosa"], "answer": 0, "explanation": "A apostila define o plasma como parte líquida."}, {"q": "As artérias, de modo geral:", "options": ["Chegam ao coração", "Saem do coração", "Possuem fluxo sempre lento", "Não possuem túnica média"], "answer": 1, "explanation": "A tabela do material indica que as artérias saem do coração."}, {"q": "As veias, de modo geral:", "options": ["Saem dos ventrículos", "Chegam ao coração", "Não possuem válvulas", "Têm túnica média mais espessa"], "answer": 1, "explanation": "A tabela indica que as veias chegam ao coração."}, {"q": "Os capilares facilitam a troca de substâncias porque:", "options": ["Possuem parede muito espessa", "São fenestrados e possuem essencialmente túnica íntima", "Possuem muitas válvulas", "São formados por osso"], "answer": 1, "explanation": "A apostila relaciona a estrutura capilar às trocas de substâncias."}, {"q": "O sistema linfático inclui:", "options": ["Linfa, vasos linfáticos e órgãos com tecido linfático", "Somente o coração", "Somente artérias", "Somente rins"], "answer": 0, "explanation": "Apostila lista linfa, vasos, linfonodos, baço, timo, tonsilas e outros componentes."}, {"q": "Os linfócitos B protegem principalmente por:", "options": ["Produção de anticorpos", "Produção de suor", "Contração muscular", "Filtração renal"], "answer": 0, "explanation": "O material relaciona linfócitos B à produção de anticorpos."}, {"q": "Quando o líquido intersticial entra nos vasos linfáticos, passa a ser chamado de:", "options": ["Plasma", "Linfa", "Sebo", "Bile"], "answer": 1, "explanation": "A principal diferença destacada é a localização do fluido."}, {"q": "Os linfonodos têm como função:", "options": ["Filtrar a linfa e reter substâncias estranhas", "Produzir urina", "Bombear sangue", "Produzir suor"], "answer": 0, "explanation": "Os linfonodos filtram a linfa e participam da defesa."}];
+let current=0, score=0;
+function render(){
+  const item=questions[current];
+  document.getElementById('count').textContent=`Questão ${current+1} de ${questions.length}`;
+  document.getElementById('score').textContent=`Acertos: ${score}`;
+  document.getElementById('bar').style.width=`${(current/questions.length)*100}%`;
+  document.getElementById('question').textContent=item.q;
+  const box=document.getElementById('options');
+  box.innerHTML='';
+  const fb=document.getElementById('feedback');
+  fb.style.display='none';
+  fb.textContent='';
+  document.getElementById('next').style.display='none';
+  item.options.forEach((txt,idx)=>{
+    const b=document.createElement('button');
+    b.className='opt';
+    b.textContent=String.fromCharCode(65+idx)+') '+txt;
+    b.onclick=()=>answer(idx,b);
+    box.appendChild(b);
+  });
+}
+function answer(idx,btn){
+  const item=questions[current];
+  [...document.querySelectorAll('.opt')].forEach((b,i)=>{
+    b.disabled=true;
+    if(i===item.answer) b.classList.add('correct');
+  });
+  if(idx===item.answer) score++;
+  else btn.classList.add('wrong');
+  document.getElementById('score').textContent=`Acertos: ${score}`;
+  const fb=document.getElementById('feedback');
+  fb.textContent=(idx===item.answer?'Muito bem! ':'Revise este ponto. ')+item.explanation;
+  fb.style.display='block';
+  document.getElementById('next').style.display='inline-block';
+}
+document.getElementById('next').onclick=()=>{
+  current++;
+  if(current<questions.length) render();
+  else finish();
+};
+function finish(){
+  document.getElementById('bar').style.width='100%';
+  const pct=Math.round(score/questions.length*100);
+  let msg = pct>=80 ? 'Excelente desempenho!' : pct>=60 ? 'Bom trabalho! Continue praticando.' : 'Vale revisar o conteúdo e tentar novamente.';
+  document.getElementById('game').innerHTML=`
+    <div class="result">
+      <div class="big">${score}/${questions.length}</div>
+      <h2>Resultado final</h2>
+      <p>Você acertou <strong>${pct}%</strong> das questões.</p>
+      <p>${msg}</p>
+      <div class="actions">
+        <button class="action primary" onclick="location.reload()">Jogar novamente</button>
+        <a class="action secondary" href="index.html">Outros jogos</a>
+      </div>
+    </div>`;
+}
+render();
+</script>
+</body>
+</html>
